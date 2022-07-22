@@ -3,7 +3,7 @@ require("dotenv").config({ path: "./.env" });
 
 /* Import express and other dependencies */
 const express = require("express");
-const mongoose = require("mongoose");
+const mysql = require("mysql");
 const cors = require("cors");
 
 /* Within app we call the top-level function exported by express module */
@@ -18,20 +18,21 @@ app.use(express.json());
 app.use(cors());
 
 /* Import model(s) */
-const ContactRequest = require("./models/contactRequest");
 
 /* Connect to DB */
-mongoose
-    .connect(process.env.DB_URL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
+try {
+    mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        password: 'grinko',
+        database: 'MySQL80'
     })
-    .then(() => {
-        console.log("Connection to mongoDB successful");
-    })
-    .catch((err) => {
-        console.error("Connection to mongoDB failed: ", err);
-    });
+    console.log('MySQL server connection successful')
+
+} catch (err) {
+    console.log('MySQL server connection failed')
+}
+
 
 /* Set up the home route via GET */
 app.get("/", (req, res) => res.send("Server online"));
@@ -40,56 +41,32 @@ app.get("/", (req, res) => res.send("Server online"));
 
 /* Create new contact */
 app.post("/contact/new", async (req, res) => {
-    /* Create an object based on the model with data taken from the request */
-    const contactEntry = await new ContactRequest({ ...req.body });
-    console.log(contactEntry);
-    /* Save in remote DB */
-    await contactEntry
-        .save()
-        /* Send back the object for logging */
-        .then((data) => res.redirect(`/contact/${data._id}`))
-        .catch((err) => { console.log(err.message); res.send(err.message) });
+    res.send('POST route')
 });
 
 /* Read single contact by ID */
 app.get("/contact/:id", async (req, res) => {
-    const id = req.params.id;
-    await ContactRequest.findById(id)
-        .then((result) => res.send(result))
-        .catch((err) => { console.log(err.message); res.send(err.message) });
+    res.send('GET route')
 });
 
 /* Read contacts */
 app.get("/contact", async (req, res) => {
-    await ContactRequest.find({})
-        .then((result) => res.send(result))
-        .catch((err) => { console.log(err.message); res.send(err.message) });
+    res.send('GET route')
 });
 
 /* Updated contact(s) */
-app.patch("/contact/update", async (req, res) => {
-    await ContactRequest.findOneAndUpdate(req.body[0], req.body[1], {
-        runValidators: true,
-    })
-        .then((data) => res.redirect(`/contact/${data._id}`))
-        .catch((err) => { console.log(err.message); res.send(err.message) });
+app.put("/contact/update", async (req, res) => {
+    res.send('PUT route')
 });
 
 /* Updated contact(s) */
-app.patch("/contact/:id/update", async (req, res) => {
-    const id = req.params.id;
-    await ContactRequest.findByIdAndUpdate(id, req.body, {
-        runValidators: true,
-    })
-        .then((data) => res.redirect(`/contact/${data._id}`))
-        .catch((err) => { console.log(err.message); res.send(err.message) });
+app.put("/contact/:id/update", async (req, res) => {
+    res.send('PUT route')
 });
 
 /* Delete contact(s) */
 app.delete("/contact/delete", async (req, res) => {
-    await ContactRequest.findOneAndDelete(req.body)
-        .then(() => res.redirect(`/contact`))
-        .catch((err) => { console.log(err.message); res.send(err.message) });
+    res.send('DELETE route')
 });
 
 /* Launch the server on specified PORT and print a log */

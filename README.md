@@ -1,12 +1,12 @@
-# Express + MongoDB Boilerplate project
+# Express + MySQL Boilerplate project
 
 This aims to be a simple template for creating backends that communicate
-with a mongoDB database.
+with a MySQL database.
 Can be used locally or deployed to a remote server.
 
 List of dependencies
 - Express v4
-- Mongoose
+- MySQL
 - CORS
 - nodemon
 - .env files support
