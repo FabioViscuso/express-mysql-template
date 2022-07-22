@@ -1,0 +1,34 @@
+{
+    "name": "express-mongodb-boilerplate",
+    "description": "Boilerplate for building express apps with express & mongoDB",
+    "version": "1.0.0",
+    "author": "Fabio Viscuso",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/FabioViscuso/express-boilerplate"
+    },
+    "keywords": [
+        "node",
+        "heroku",
+        "express"
+    ],
+    "scripts": {
+        "start-dev": "nodemon index.js",
+        "start": "node index.js"
+    },
+    "main": "index.js",
+    "devDependencies": {
+        "eslint": "^8.15.0",
+        "nodemon": "^2.0.16"
+    },
+    "dependencies": {
+        "dotenv": "^16.0.1",
+        "cors": "^2.8.5",
+        "express": "^4.18.1",
+        "mongoose": "^6.3.3"
+    },
+    "engines": {
+        "node": "16.x"
+    }
+}
