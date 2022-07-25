@@ -2,12 +2,11 @@
 require("dotenv").config({ path: "./.env" });
 
 /* Import express and other dependencies */
-const express = require("express");
-const mysql = require("mysql");
-const cors = require("cors");
-
+import express, { Express } from "express";
+import mysql from "mysql";
+import cors from 'cors';
 /* Within app we call the top-level function exported by express module */
-const app = express();
+const app: Express = express();
 
 /* Initialize middleware */
 /* parse application/x-www-form-urlencoded */
@@ -20,22 +19,18 @@ app.use(cors());
 /* Import model(s) */
 
 /* Connect to DB */
-try {
-    mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: 'grinko',
-        database: 'MySQL80'
-    })
-    console.log('MySQL server connection successful')
 
-} catch (err) {
-    console.log('MySQL server connection failed')
-}
+mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'grinko',
+    database: 'MySQL80'
+})
+console.log('MySQL server connection successful')
 
 
 /* Set up the home route via GET */
-app.get("/", (req, res) => res.send("Server online"));
+app.get("/", (req, res) => res.send("Express + TS + SQL server online"));
 
 /*---------------- CRUD ENDPOINTS ----------------*/
 
