@@ -1,5 +1,6 @@
 /* Add .env support */
-require("dotenv").config({ path: "./.env" });
+import * as dotenv from "dotenv"
+dotenv.config({ path: "./.env" })
 
 /* Import express and other dependencies */
 import express, { Express } from "express";

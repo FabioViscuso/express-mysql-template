@@ -1,12 +1,26 @@
 module.exports = {
+    root: true,
     env: {
         node: true,
-        es2021: true,
     },
-    extends: "eslint:recommended",
-    parserOptions: {
-        ecmaVersion: "latest",
-        sourceType: "module",
+    extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+    parser: "@typescript-eslint/parser",
+    overrides: [
+        {
+            files: ["*.ts"],
+            rules: {
+                "no-undef": "off",
+            }
+        },
+        {
+            files: ["*.test.ts"],
+            env: {
+                node: true,
+                jest: true,
+            }
+        },
+    ],
+    rules: {
+        "@typescript-eslint/ban-ts-comment": "off"
     },
-    rules: {},
 };
