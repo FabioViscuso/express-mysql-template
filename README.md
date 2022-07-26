@@ -1,4 +1,4 @@
-# Express + MySQL Boilerplate project
+# Express + TS + MySQL Boilerplate project
 
 This aims to be a simple template for creating backends that communicate
 with a MySQL database.
@@ -6,7 +6,8 @@ Can be used locally or deployed to a remote server.
 
 List of dependencies
 - Express v4
-- MySQL
+- TypeScript w/types
+- SQL database
 - CORS
 - nodemon
 - .env files support
