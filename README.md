@@ -1,7 +1,7 @@
-# Express + TS + MySQL Boilerplate project
+# Express + TS + SQL Boilerplate project
 
 This aims to be a simple template for creating backends that communicate
-with a MySQL database.
+with a SQL database.
 Can be used locally or deployed to a remote server.
 
 List of dependencies
@@ -12,3 +12,4 @@ List of dependencies
 - nodemon
 - .env files support
 - eslint support
+- Testing w/Jest

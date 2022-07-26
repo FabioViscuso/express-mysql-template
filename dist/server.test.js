@@ -19,7 +19,7 @@ test("GET /", () => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield simulation
         .get("/")
         .expect(200)
-        .expect("Content-Type", 'application/json');
+        .expect("Content-Type", /application\/json/);
     expect(response.body).toEqual({ message: "Hello!" });
 }));
 //# sourceMappingURL=server.test.js.map

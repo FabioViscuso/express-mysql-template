@@ -29,30 +29,11 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
 /* enable cors */
 app.use((0, cors_1.default)());
-app.use(function addCustomHeader(req, res, next) {
-    console.log('called addCustomHeader');
-    res.setHeader("X-Custom-Header", "custom");
-    next();
-});
-app.use(function throwError(req, res, next) {
-    console.log('called throwError');
-    next(new Error('Error here'));
-});
-app.use(function sendData(req, res, next) {
-    console.log('called sendData');
-    res.json({ message: "hello!" });
-    next();
-});
-const showError = (error, req, res, next) => {
-    console.log('called showError');
-    res.status(500);
-    res.json({ message: error.message });
-    console.log(error.message);
-    next();
-};
-app.use(showError);
 /* Set up the home route via GET */
-app.get("/", (req, res) => res.send("Express + TS + SQL server online"));
+app.get("/", (req, res) => {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.send({ message: "Hello!" });
+});
 /*---------------- CRUD ENDPOINTS ----------------*/
 /* Create new contact */
 app.post("/contact/new", (req, res) => __awaiter(void 0, void 0, void 0, function* () {

@@ -4,7 +4,7 @@
 */
 
 /* Import express and other dependencies */
-import express, { ErrorRequestHandler } from "express";
+import express from "express";
 import "express-async-errors";
 import cors from 'cors';
 /* Within app we call the top-level function exported by express module */
@@ -18,35 +18,11 @@ app.use(express.json());
 /* enable cors */
 app.use(cors());
 
-app.use(function addCustomHeader(req, res, next) {
-    console.log('called addCustomHeader');
-    res.setHeader("X-Custom-Header", "custom");
-    next();
-})
-
-app.use(function throwError(req, res, next) {
-    console.log('called throwError');
-    next(new Error('Error here'));
-})
-
-app.use(function sendData(req, res, next) {
-    console.log('called sendData');
-    res.json({ message: "hello!" });
-    next();
-})
-
-const showError: ErrorRequestHandler = (error, req, res, next) => {
-    console.log('called showError');
-    res.status(500);
-    res.json({ message: error.message });
-    console.log(error.message)
-    next();
-}
-
-app.use(showError)
-
 /* Set up the home route via GET */
-app.get("/", (req, res) => res.send("Express + TS + SQL server online"));
+app.get("/", (req, res) => {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.send({ message: "Hello!" });
+});
 
 /*---------------- CRUD ENDPOINTS ----------------*/
 
