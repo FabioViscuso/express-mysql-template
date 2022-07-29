@@ -26,34 +26,34 @@ app.get("/", (req, res) => {
 
 /*---------------- CRUD ENDPOINTS ----------------*/
 
-/* Create new contact */
-app.post("/contact/new", async (req, res) => {
-    res.send('POST route')
+/* Create new planet */
+app.post("/planets", async (req, res) => {
+    res.send('POST route for creating planets')
 });
 
-/* Read single contact by ID */
-app.get("/contact/:id", async (req, res) => {
-    res.send('GET route')
+/* Read planets */
+app.get("/planets", async (req, res) => {
+    res.send('GET route for retrieving all planets')
 });
 
-/* Read contacts */
-app.get("/contact", async (req, res) => {
-    res.send('GET route')
+/* Read single planet by ID */
+app.get("/planets/:id", async (req, res) => {
+    res.send('GET route for retrieving a planet by id')
 });
 
-/* Updated contact(s) */
-app.put("/contact/update", async (req, res) => {
-    res.send('PUT route')
+/* Update planet */
+app.put("/planets/:id", async (req, res) => {
+    res.send('PUT route for updating a planet by id')
 });
 
-/* Updated contact(s) */
-app.put("/contact/:id/update", async (req, res) => {
-    res.send('PUT route')
+/* Add photo to a planet */
+app.post("/planets/:id/photo", async (req, res) => {
+    res.send('PUT route for adding photo to a planet by id')
 });
 
-/* Delete contact(s) */
-app.delete("/contact/delete", async (req, res) => {
-    res.send('DELETE route')
+/* Delete planet(s) */
+app.delete("/planets/:id", async (req, res) => {
+    res.send('DELETE route for deleting a planet by id')
 });
 
 export default app;
