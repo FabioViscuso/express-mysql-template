@@ -1,5 +1,4 @@
 /node_modules
 /.eslintcache
-/prisma
 /*.env
 npm-debug.log
