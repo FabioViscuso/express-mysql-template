@@ -46,11 +46,26 @@ describe("POST /planets", () => {
     test("Valid request", async () => {
         const newMockPlanet =
         {
-            "name": "Pluto",
-            "description": "Small planet, big heart",
-            "diameter": 500000,
-            "moons": 0,
+            "name": "Mars",
+            "description": "The infamous red planet",
+            "diameter": 456000,
+            "moons": 2,
         }
+
+        const createdPlanet =
+        {
+            "id": 3,
+            "name": "Mars",
+            "description": "The infamous red planet",
+            "diameter": 456000,
+            "moons": 2,
+            "createdAt": "2022-08-01T17:07:32.357Z",
+            "updatedAt": "2022-08-01T17:07:32.358Z"
+        }
+
+        //! KNOWN ISSUE WITH PRISMA
+        // @ts-ignore
+        prismaMock.planet.create.mockResolvedValue(createdPlanet);
 
         const response = await simulation
             .post("/planets")
@@ -58,7 +73,7 @@ describe("POST /planets", () => {
             .expect(201)
             .expect("Content-Type", /application\/json/)
 
-        expect(response.body).toEqual(newMockPlanet)
+        expect(response.body).toEqual(createdPlanet)
     })
 
     test("Invalid request", async () => {
@@ -70,6 +85,10 @@ describe("POST /planets", () => {
             "moons": 0,
         }
 
+        //! KNOWN ISSUE WITH PRISMA
+        // @ts-ignore
+        prismaMock.planet.create.mockResolvedValue(newMockPlanet);
+
         const response = await simulation
             .post("/planets")
             .send(newMockPlanet)
@@ -77,6 +96,7 @@ describe("POST /planets", () => {
             .expect("Content-Type", /application\/json/)
 
         expect(response.body).toEqual({
+            message: "Something is wrong with your JSON, check attached log",
             errors: {
                 body: expect.any(Array)
             }
