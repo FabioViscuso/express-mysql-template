@@ -9,7 +9,6 @@ import "express-async-errors";
 import cors from 'cors';
 import prisma from "./lib/prisma/client";
 import { validate, ValidationErrorMiddleware, planetSchema, PlanetSchema } from "./lib/validation";
-import { nextTick } from "process";
 
 /* Within app we call the top-level function exported by express module */
 const app = express();
