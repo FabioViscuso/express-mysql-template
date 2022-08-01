@@ -7,6 +7,9 @@
 import express from "express";
 import "express-async-errors";
 import cors from 'cors';
+import prisma from "./lib/prisma/client";
+import { validate, ValidationErrorMiddleware, planetSchema, PlanetSchema } from "./lib/validation";
+
 /* Within app we call the top-level function exported by express module */
 const app = express();
 
@@ -27,13 +30,15 @@ app.get("/", (req, res) => {
 /*---------------- CRUD ENDPOINTS ----------------*/
 
 /* Create new planet */
-app.post("/planets", async (req, res) => {
-    res.send('POST route for creating planets')
+app.post("/planets", validate({ body: planetSchema }), async (req, res) => {
+    const newPlanet: PlanetSchema = req.body;
+    res.status(201).json(newPlanet);
 });
 
 /* Read planets */
 app.get("/planets", async (req, res) => {
-    res.send('GET route for retrieving all planets')
+    const planets = await prisma.planet.findMany();
+    res.status(200).json(planets);
 });
 
 /* Read single planet by ID */
@@ -55,5 +60,8 @@ app.post("/planets/:id/photo", async (req, res) => {
 app.delete("/planets/:id", async (req, res) => {
     res.send('DELETE route for deleting a planet by id')
 });
+
+/* This middleware needs to be used after all the routes, like a "catch" */
+app.use(ValidationErrorMiddleware)
 
 export default app;

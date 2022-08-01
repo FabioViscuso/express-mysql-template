@@ -20,6 +20,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 require("express-async-errors");
 const cors_1 = __importDefault(require("cors"));
+const client_1 = __importDefault(require("./lib/prisma/client"));
+const validation_1 = require("./lib/validation");
 /* Within app we call the top-level function exported by express module */
 const app = (0, express_1.default)();
 /* Initialize middleware */
@@ -35,29 +37,33 @@ app.get("/", (req, res) => {
     res.send({ message: "Hello!" });
 });
 /*---------------- CRUD ENDPOINTS ----------------*/
-/* Create new contact */
-app.post("/contact/new", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send('POST route');
+/* Create new planet */
+app.post("/planets", (0, validation_1.validate)({ body: validation_1.planetSchema }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const newPlanet = req.body;
+    res.status(201).json(newPlanet);
 }));
-/* Read single contact by ID */
-app.get("/contact/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send('GET route');
+/* Read planets */
+app.get("/planets", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const planets = yield client_1.default.planet.findMany();
+    res.status(200).json(planets);
 }));
-/* Read contacts */
-app.get("/contact", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send('GET route');
+/* Read single planet by ID */
+app.get("/planets/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.send('GET route for retrieving a planet by id');
 }));
-/* Updated contact(s) */
-app.put("/contact/update", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send('PUT route');
+/* Update planet */
+app.put("/planets/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.send('PUT route for updating a planet by id');
 }));
-/* Updated contact(s) */
-app.put("/contact/:id/update", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send('PUT route');
+/* Add photo to a planet */
+app.post("/planets/:id/photo", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.send('PUT route for adding photo to a planet by id');
 }));
-/* Delete contact(s) */
-app.delete("/contact/delete", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send('DELETE route');
+/* Delete planet(s) */
+app.delete("/planets/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.send('DELETE route for deleting a planet by id');
 }));
+/* This middleware needs to be used after all the routes, like a "catch" */
+app.use(validation_1.ValidationErrorMiddleware);
 exports.default = app;
 //# sourceMappingURL=server.js.map
