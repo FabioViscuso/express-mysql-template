@@ -14,7 +14,8 @@
         "express"
     ],
     "scripts": {
-        "test": "jest",
+        "test-once": "jest",
+        "test-watch": "jest --watch",
         "lint": "eslint src/ --cache --fix",
         "build": "tsc",
         "build@dev": "tsc --watch",

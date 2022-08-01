@@ -39,7 +39,9 @@ app.get("/", (req, res) => {
 /*---------------- CRUD ENDPOINTS ----------------*/
 /* Create new planet */
 app.post("/planets", (0, validation_1.validate)({ body: validation_1.planetSchema }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const newPlanet = req.body;
+    /* If the req passes validation, this code will run */
+    const incomingPlanetData = req.body;
+    const newPlanet = yield client_1.default.planet.create({ data: incomingPlanetData });
     res.status(201).json(newPlanet);
 }));
 /* Read planets */

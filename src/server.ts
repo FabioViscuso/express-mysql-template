@@ -31,7 +31,9 @@ app.get("/", (req, res) => {
 
 /* Create new planet */
 app.post("/planets", validate({ body: planetSchema }), async (req, res) => {
-    const newPlanet: PlanetSchema = req.body;
+    /* If the req passes validation, this code will run */
+    const incomingPlanetData: PlanetSchema = req.body;
+    const newPlanet = await prisma.planet.create({ data: incomingPlanetData })
     res.status(201).json(newPlanet);
 });
 

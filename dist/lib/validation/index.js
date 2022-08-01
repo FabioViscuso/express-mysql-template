@@ -31,6 +31,7 @@ exports.validate = validatorInstance.validate;
 const ValidationErrorMiddleware = (err, req, res, next) => {
     if (err instanceof express_json_validator_middleware_1.ValidationError) {
         res.status(422).setHeader("Content-Type", "application/json").send({
+            message: "Something is wrong with your JSON, check attached log",
             errors: err.validationErrors
         });
         next();
