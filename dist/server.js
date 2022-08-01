@@ -46,12 +46,22 @@ app.post("/planets", (0, validation_1.validate)({ body: validation_1.planetSchem
 }));
 /* Read planets */
 app.get("/planets", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const planets = yield client_1.default.planet.findMany();
-    res.status(200).json(planets);
+    const planet = yield client_1.default.planet.findMany();
+    res.status(200).json(planet);
 }));
-/* Read single planet by ID */
-app.get("/planets/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send('GET route for retrieving a planet by id');
+/* Read single planet by numeric ID */
+app.get("/planets/:id(\\d+)", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const planetID = Number(req.params.id);
+    const planet = yield client_1.default.planet.findUnique({
+        where: { id: planetID }
+    });
+    // if findUnique doesn't find a matching entry, it will return null
+    if (!planet) {
+        res.status(404);
+        // pass the error to the express error handling middleware
+        return next(`Cannot GET /planets/${planetID}. Element does not exist`);
+    }
+    res.status(200).send(planet);
 }));
 /* Update planet */
 app.put("/planets/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {

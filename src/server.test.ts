@@ -41,6 +41,54 @@ describe("GET /planets", () => {
     })
 })
 
+describe("GET /planets/:id", () => {
+    test("Valid request (element found)", async () => {
+        const mockPlanet =
+        {
+            "id": 1,
+            "name": "Earth",
+            "description": "The planet we live on",
+            "diameter": 3600000,
+            "moons": 1,
+            "createdAt": "2022-08-01T09:19:41.975Z",
+            "updatedAt": "2022-08-01T15:42:05.944Z"
+        }
+
+        //! KNOWN ISSUE WITH PRISMA
+        // @ts-ignore
+        prismaMock.planet.findUnique.mockResolvedValue(mockPlanet);
+
+        const response = await simulation
+            .get("/planets/1")
+            .expect(200)
+            .expect("Content-Type", /application\/json/)
+
+        expect(response.body).toEqual(mockPlanet)
+    })
+
+    test("Invalid request (no such element)", async () => {
+        //! KNOWN ISSUE WITH PRISMA
+        // @ts-ignore
+        prismaMock.planet.findUnique.mockResolvedValue(null);
+
+        const response = await simulation
+            .get("/planets/99")
+            .expect(404)
+            .expect("Content-Type", /text\/html/)
+
+        expect(response.text).toContain("Cannot GET /planets/99. Element does not exist")
+
+    })
+
+    test("Invalid request (invalid ID format)", async () => {
+        const response = await simulation
+            .get("/planets/qwerty")
+            .expect(404)
+            .expect("Content-Type", /text\/html/)
+
+        expect(response.text).toContain("Cannot GET /planets/qwerty")
+    })
+})
 
 describe("POST /planets", () => {
     test("Valid request", async () => {
@@ -76,7 +124,7 @@ describe("POST /planets", () => {
         expect(response.body).toEqual(createdPlanet)
     })
 
-    test("Invalid request", async () => {
+    test("Invalid request (doesn't follow schema)", async () => {
         const newMockPlanet =
         {
             // PURPOSEFULLY OMIT THIS MANDATORY PROPERTY: "name": "Pluto",

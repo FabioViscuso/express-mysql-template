@@ -9,6 +9,7 @@ import "express-async-errors";
 import cors from 'cors';
 import prisma from "./lib/prisma/client";
 import { validate, ValidationErrorMiddleware, planetSchema, PlanetSchema } from "./lib/validation";
+import { nextTick } from "process";
 
 /* Within app we call the top-level function exported by express module */
 const app = express();
@@ -39,13 +40,24 @@ app.post("/planets", validate({ body: planetSchema }), async (req, res) => {
 
 /* Read planets */
 app.get("/planets", async (req, res) => {
-    const planets = await prisma.planet.findMany();
-    res.status(200).json(planets);
+    const planet = await prisma.planet.findMany();
+    res.status(200).json(planet);
 });
 
-/* Read single planet by ID */
-app.get("/planets/:id", async (req, res) => {
-    res.send('GET route for retrieving a planet by id')
+/* Read single planet by numeric ID */
+app.get("/planets/:id(\\d+)", async (req, res, next) => {
+    const planetID = Number(req.params.id)
+    const planet = await prisma.planet.findUnique({
+        where: { id: planetID }
+    });
+    // if findUnique doesn't find a matching entry, it will return null
+    if (!planet) {
+        res.status(404)
+        // pass the error to the express error handling middleware
+        return next(`Cannot GET /planets/${planetID}. Element does not exist`)
+    }
+
+    res.status(200).send(planet)
 });
 
 /* Update planet */
