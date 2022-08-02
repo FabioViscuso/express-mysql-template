@@ -292,3 +292,51 @@ describe("POST /planets", () => {
 /* ----------------- */
 /* CRUD TEST: CREATE */
 /* ----------------- */
+
+
+
+/* ----------------- */
+/* CRUD TEST: DELETE */
+/* ----------------- */
+describe("DELETE /planets/:id", () => {
+    /* VALID REQUEST */
+    test("Valid request", async () => {
+        const response = await simulation
+            .delete("/planets/1")
+            .expect(204) // No Content status code
+
+        expect(response.text).toEqual("")
+    })
+    /* END OF VALID REQUEST */
+
+
+    /* INVALID REQUEST: NO SUCH ENTRY */
+    test("Invalid request: item not found", async () => {
+        //! KNOWN ISSUE WITH PRISMA
+        // @ts-ignore
+        prismaMock.planet.delete.mockRejectedValue(new Error("Error"));
+
+        const response = await simulation
+            .delete("/planets/99")
+            .expect(404)
+            .expect("Content-Type", /text\/html/)
+
+        expect(response.text).toContain("Cannot DELETE /planets/99. Element does not exist")
+    })
+    /* END OF INVALID REQUEST: NO SUCH ENTRY */
+
+
+    /* INVALID REQUEST: INVALID ID FORMAT */
+    test("Invalid request (invalid ID format)", async () => {
+        const response = await simulation
+            .delete("/planets/qwerty")
+            .expect(404)
+            .expect("Content-Type", /text\/html/)
+
+        expect(response.text).toContain("Cannot DELETE /planets/qwerty")
+    })
+    /* END OF INVALID REQUEST: INVALID ID FORMAT */
+})
+/* ----------------- */
+/* CRUD TEST: DELETE */
+/* ----------------- */

@@ -72,7 +72,7 @@ app.put("/planets/:id(\\d+)", validate({ body: planetSchema }), async (req, res,
         res.status(200).json(planet);
     } catch (err) {
         res.status(404);
-        next(`Cannot PUT /planets/${planetID}. Element does not exist`)
+        next(`Cannot PUT /planets/${planetID}. Element does not exist`);
     }
 });
 
@@ -82,8 +82,15 @@ app.post("/planets/:id(\\d+)/photo", async (req, res) => {
 });
 
 /* Delete planet(s) */
-app.delete("/planets/:id(\\d+)", async (req, res) => {
-    res.send('DELETE route for deleting a planet by id')
+app.delete("/planets/:id(\\d+)", async (req, res, next) => {
+    const planetID = Number(req.params.id)
+    try {
+        await prisma.planet.delete({ where: { id: planetID } });
+        res.status(204).end();
+    } catch (err) {
+        res.status(404);
+        next(`Cannot DELETE /planets/${planetID}. Element does not exist`);
+    }
 });
 
 /* This middleware needs to be used after all the routes, like a "catch" */

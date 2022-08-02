@@ -84,8 +84,16 @@ app.post("/planets/:id(\\d+)/photo", (req, res) => __awaiter(void 0, void 0, voi
     res.send('PUT route for adding photo to a planet by id');
 }));
 /* Delete planet(s) */
-app.delete("/planets/:id(\\d+)", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send('DELETE route for deleting a planet by id');
+app.delete("/planets/:id(\\d+)", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const planetID = Number(req.params.id);
+    try {
+        yield client_1.default.planet.delete({ where: { id: planetID } });
+        res.status(204).end();
+    }
+    catch (err) {
+        res.status(404);
+        next(`Cannot DELETE /planets/${planetID}. Element does not exist`);
+    }
 }));
 /* This middleware needs to be used after all the routes, like a "catch" */
 app.use(validation_1.ValidationErrorMiddleware);
