@@ -61,18 +61,30 @@ app.get("/planets/:id(\\d+)", (req, res, next) => __awaiter(void 0, void 0, void
         // pass the error to the express error handling middleware
         return next(`Cannot GET /planets/${planetID}. Element does not exist`);
     }
-    res.status(200).send(planet);
+    res.status(200).json(planet);
 }));
 /* Update planet */
-app.put("/planets/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send('PUT route for updating a planet by id');
+app.put("/planets/:id(\\d+)", (0, validation_1.validate)({ body: validation_1.planetSchema }), (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const planetID = Number(req.params.id);
+    const incomingPlanetData = req.body;
+    try {
+        const planet = yield client_1.default.planet.update({
+            where: { id: planetID },
+            data: incomingPlanetData
+        });
+        res.status(200).json(planet);
+    }
+    catch (err) {
+        res.status(404);
+        next(`Cannot PUT /planets/${planetID}. Element does not exist`);
+    }
 }));
 /* Add photo to a planet */
-app.post("/planets/:id/photo", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post("/planets/:id(\\d+)/photo", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send('PUT route for adding photo to a planet by id');
 }));
 /* Delete planet(s) */
-app.delete("/planets/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.delete("/planets/:id(\\d+)", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send('DELETE route for deleting a planet by id');
 }));
 /* This middleware needs to be used after all the routes, like a "catch" */

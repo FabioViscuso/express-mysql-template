@@ -2,15 +2,15 @@
 import { ErrorRequestHandler } from "express";
 
 /* Import dependencies */
-import addFormats from "ajv-formats"
+/* import addFormats from "ajv-formats" */
 import { Validator, ValidationError } from "express-json-validator-middleware"
 
 /* We instantiate a new Validator passing an empty config object this time */
 const validatorInstance = new Validator({});
 
-addFormats(validatorInstance.ajv, ["date-time"])
+/* addFormats(validatorInstance.ajv, ["date-time"])
     .addKeyword("kind")
-    .addKeyword("modifier")
+    .addKeyword("modifier") */
 
 export const validate = validatorInstance.validate;
 

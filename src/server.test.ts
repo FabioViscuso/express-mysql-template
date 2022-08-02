@@ -5,6 +5,9 @@ import server from "./server";
 
 const simulation = supertest(server);
 
+/* ------------------ */
+/* CRUD TEST: GET ALL */
+/* ------------------ */
 describe("GET /planets", () => {
     test("Valid request", async () => {
         const mockPlanets = [
@@ -40,8 +43,18 @@ describe("GET /planets", () => {
         expect(response.body).toEqual(mockPlanets)
     })
 })
+/* ----------------- */
+/* CRUD TEST: GET ALL */
+/* ----------------- */
 
+
+
+
+/* -------------------- */
+/* CRUD TEST: GET BY ID */
+/* -------------------- */
 describe("GET /planets/:id", () => {
+    /* VALID REQUEST */
     test("Valid request (element found)", async () => {
         const mockPlanet =
         {
@@ -65,10 +78,11 @@ describe("GET /planets/:id", () => {
 
         expect(response.body).toEqual(mockPlanet)
     })
+    /* END OF VALID REQUEST */
 
+
+    /* INVALID REQUEST: MISSING ELEMENT */
     test("Invalid request (no such element)", async () => {
-        //! KNOWN ISSUE WITH PRISMA
-        // @ts-ignore
         prismaMock.planet.findUnique.mockResolvedValue(null);
 
         const response = await simulation
@@ -79,7 +93,10 @@ describe("GET /planets/:id", () => {
         expect(response.text).toContain("Cannot GET /planets/99. Element does not exist")
 
     })
+    /* END OF INVALID REQUEST: MISSING ELEMENT */
 
+
+    /* INVALID REQUEST: INVALID ID */
     test("Invalid request (invalid ID format)", async () => {
         const response = await simulation
             .get("/planets/qwerty")
@@ -88,9 +105,126 @@ describe("GET /planets/:id", () => {
 
         expect(response.text).toContain("Cannot GET /planets/qwerty")
     })
+    /* END OF INVALID REQUEST: INVALID ID */
 })
+/* -------------------- */
+/* CRUD TEST: GET BY ID */
+/* -------------------- */
 
+
+
+
+/* ----------------- */
+/* CRUD TEST: UPDATE */
+/* ----------------- */
+describe("PUT /planets/:id", () => {
+    /* VALID REQUEST */
+    test("Valid request", async () => {
+        const mockPlanet =
+        {
+            "name": "Jupiter",
+            "description": "The solar system's bigger brother",
+            "diameter": 99000000,
+            "moons": 18,
+        }
+
+        const updatedMockPlanet =
+        {
+            "id": 4,
+            "name": "Jupiter",
+            "description": "The solar system's bigger brother",
+            "diameter": 99000000,
+            "moons": 18,
+            "createdAt": "2022-08-01T09:19:41.975Z",
+            "updatedAt": "2022-08-01T15:42:05.944Z"
+        }
+
+        //! KNOWN ISSUE WITH PRISMA
+        // @ts-ignore
+        prismaMock.planet.update.mockResolvedValue(updatedMockPlanet);
+
+        const response = await simulation
+            .put("/planets/4")
+            .send(mockPlanet)
+            .expect(200)
+            .expect("Content-Type", /application\/json/)
+
+        expect(response.body).toEqual(updatedMockPlanet)
+    })
+    /* END OF VALID REQUEST */
+
+
+    /* INVALID REQUEST: BAD REQUEST */
+    test("Invalid request: bad request", async () => {
+        const mockPlanet =
+        {
+            "description": "Sounds sketchy",
+            "diameter": 99000000,
+            "moons": 18,
+        }
+
+        const response = await simulation
+            .put("/planets/99")
+            .send(mockPlanet)
+            .expect(422)
+            .expect("Content-Type", /application\/json/)
+
+        expect(response.body).toEqual({
+            message: "Something is wrong with your JSON, check attached log",
+            errors: {
+                body: expect.any(Array)
+            }
+        })
+    })
+    /* END OF INVALID REQUEST: BAD REQUEST */
+
+
+    /* INVALID REQUEST: NO SUCH ENTRY */
+    test("Invalid request: item not found", async () => {
+        const mockPlanet =
+        {
+            "name": "Uranus",
+            "description": "Sounds sketchy",
+            "diameter": 99000000,
+            "moons": 18,
+        }
+
+        prismaMock.planet.update.mockRejectedValue(new Error('Error'));
+
+        const response = await simulation
+            .put("/planets/99")
+            .send(mockPlanet)
+            .expect(404)
+            .expect("Content-Type", /text\/html/)
+
+        expect(response.text).toContain("Cannot PUT /planets/99. Element does not exist")
+    })
+    /* END OF INVALID REQUEST: NO SUCH ENTRY */
+
+
+    /* INVALID REQUEST: INVALID ID FORMAT */
+    test("Invalid request (invalid ID format)", async () => {
+        const response = await simulation
+            .put("/planets/qwerty")
+            .expect(404)
+            .expect("Content-Type", /text\/html/)
+
+        expect(response.text).toContain("Cannot PUT /planets/qwerty")
+    })
+    /* END OF INVALID REQUEST: INVALID ID FORMAT */
+})
+/* ----------------- */
+/* CRUD TEST: UPDATE */
+/* ----------------- */
+
+
+
+
+/* ----------------- */
+/* CRUD TEST: CREATE */
+/* ----------------- */
 describe("POST /planets", () => {
+    /* VALID REQUEST */
     test("Valid request", async () => {
         const newMockPlanet =
         {
@@ -123,7 +257,10 @@ describe("POST /planets", () => {
 
         expect(response.body).toEqual(createdPlanet)
     })
+    /* VALID REQUEST */
 
+
+    /* INVALID REQUEST: INVALID FORMAT */
     test("Invalid request (doesn't follow schema)", async () => {
         const newMockPlanet =
         {
@@ -150,4 +287,8 @@ describe("POST /planets", () => {
             }
         })
     })
+    /* INVALID REQUEST: INVALID FORMAT */
 })
+/* ----------------- */
+/* CRUD TEST: CREATE */
+/* ----------------- */

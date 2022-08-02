@@ -56,21 +56,33 @@ app.get("/planets/:id(\\d+)", async (req, res, next) => {
         return next(`Cannot GET /planets/${planetID}. Element does not exist`)
     }
 
-    res.status(200).send(planet)
+    res.status(200).json(planet)
 });
 
 /* Update planet */
-app.put("/planets/:id", async (req, res) => {
-    res.send('PUT route for updating a planet by id')
+app.put("/planets/:id(\\d+)", validate({ body: planetSchema }), async (req, res, next) => {
+    const planetID = Number(req.params.id)
+    const incomingPlanetData: PlanetSchema = req.body;
+
+    try {
+        const planet = await prisma.planet.update({
+            where: { id: planetID },
+            data: incomingPlanetData
+        });
+        res.status(200).json(planet);
+    } catch (err) {
+        res.status(404);
+        next(`Cannot PUT /planets/${planetID}. Element does not exist`)
+    }
 });
 
 /* Add photo to a planet */
-app.post("/planets/:id/photo", async (req, res) => {
+app.post("/planets/:id(\\d+)/photo", async (req, res) => {
     res.send('PUT route for adding photo to a planet by id')
 });
 
 /* Delete planet(s) */
-app.delete("/planets/:id", async (req, res) => {
+app.delete("/planets/:id(\\d+)", async (req, res) => {
     res.send('DELETE route for deleting a planet by id')
 });
 

@@ -13,19 +13,16 @@ var __createBinding = (this && this.__createBinding) || (Object.create ? (functi
 var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ValidationErrorMiddleware = exports.validate = void 0;
 /* Import dependencies */
-const ajv_formats_1 = __importDefault(require("ajv-formats"));
+/* import addFormats from "ajv-formats" */
 const express_json_validator_middleware_1 = require("express-json-validator-middleware");
 /* We instantiate a new Validator passing an empty config object this time */
 const validatorInstance = new express_json_validator_middleware_1.Validator({});
-(0, ajv_formats_1.default)(validatorInstance.ajv, ["date-time"])
+/* addFormats(validatorInstance.ajv, ["date-time"])
     .addKeyword("kind")
-    .addKeyword("modifier");
+    .addKeyword("modifier") */
 exports.validate = validatorInstance.validate;
 /* To be called in server.ts as a middleware */
 const ValidationErrorMiddleware = (err, req, res, next) => {
