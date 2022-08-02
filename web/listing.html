@@ -20,17 +20,16 @@
             data.forEach(element => {
                 const listItem = document.createElement('li')
 
-                const planetName = document.createTextNode('name: ' + element.name + '  ')
-                const planetDescription = document.createTextNode('description: ' + element.description + '  ')
-                const planetDiameter = document.createTextNode('diameter: ' + element.diameter + '  ')
-                const planetMoons = document.createTextNode('moons: ' + element.moons)
+                const planetData = listItem.innerHTML =
+                    `
+                    name: ${element.name} <br>
+                    description: ${element.description} <br>
+                    diameter: ${element.diameter} <br>
+                    moons: ${element.moons} <br>
+                    <hr>
+                    `
 
-                listItem.appendChild(planetName)
-                listItem.appendChild(planetDescription)
-                listItem.appendChild(planetDiameter)
-                listItem.appendChild(planetMoons)
-
-                list.appendChild(listItem)
+                list.append(listItem)
             });
         }
 
