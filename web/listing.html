@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List planets</title>
+</head>
+<body>
+    <h1>Planets list page</h1>
+    <script>
+        async function fetchPlanets() {
+            const res = await fetch('http://localhost:8080/planets');
+            const data = await res.json();
+            console.log({data})
+
+            const list = document.createElement('ul')
+            document.body.appendChild(list)
+
+            data.forEach(element => {
+                const listItem = document.createElement('li')
+
+                const planetName = document.createTextNode('name: ' + element.name + '  ')
+                const planetDescription = document.createTextNode('description: ' + element.description + '  ')
+                const planetDiameter = document.createTextNode('diameter: ' + element.diameter + '  ')
+                const planetMoons = document.createTextNode('moons: ' + element.moons)
+
+                listItem.appendChild(planetName)
+                listItem.appendChild(planetDescription)
+                listItem.appendChild(planetDiameter)
+                listItem.appendChild(planetMoons)
+
+                list.appendChild(listItem)
+            });
+        }
+
+        fetchPlanets()
+    </script>
+</body>
+</html>

@@ -19,12 +19,12 @@ app.use(express.urlencoded({ extended: true }));
 /* parse application/json */
 app.use(express.json());
 /* enable cors */
-app.use(cors());
+app.use(cors({ origin: "http:/localhost:8080" }));
 
 /* Set up the home route via GET */
-app.get("/", (req, res) => {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.send({ message: "Hello!" });
+app.get("/listing", (req, res) => {
+    /* res.writeHead(200, { 'Content-Type': 'text/html' }); */
+    res.sendFile('listing.html', { 'root': `${__dirname}/../web/` });
 });
 
 /*---------------- CRUD ENDPOINTS ----------------*/

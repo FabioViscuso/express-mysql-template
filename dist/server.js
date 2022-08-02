@@ -30,11 +30,11 @@ app.use(express_1.default.urlencoded({ extended: true }));
 /* parse application/json */
 app.use(express_1.default.json());
 /* enable cors */
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({ origin: "http:/localhost:8080" }));
 /* Set up the home route via GET */
-app.get("/", (req, res) => {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.send({ message: "Hello!" });
+app.get("/listing", (req, res) => {
+    /* res.writeHead(200, { 'Content-Type': 'text/html' }); */
+    res.sendFile('listing.html', { 'root': `${__dirname}/../web/` });
 });
 /*---------------- CRUD ENDPOINTS ----------------*/
 /* Create new planet */
