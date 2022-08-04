@@ -6,7 +6,7 @@ import { ErrorRequestHandler } from "express";
 import { Validator, ValidationError } from "express-json-validator-middleware"
 
 /* We instantiate a new Validator passing an empty config object this time */
-const validatorInstance = new Validator({});
+const validatorInstance = new Validator({ coerceTypes: true });
 
 /* addFormats(validatorInstance.ajv, ["date-time"])
     .addKeyword("kind")

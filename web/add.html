@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add a planet</title>
+</head>
+<body>
+    <h1>Add a planet</h1>
+    <form id="addPlanetForm" action="http://localhost:8080/planets">
+        <label for="name">Planet name: </label>
+        <input name="name" type="text" id="name">
+
+        <label for="description">Description: </label>
+        <input name="description" type="text" id="description">
+
+        <label for="diameter">Diameter: </label>
+        <input name="diameter" type="number" id="diameter">
+
+        <label for="moons">Number of moons: </label>
+        <input name="moons" type="number" id="moons">
+
+        <button type="submit">Add this planet</button>
+    </form>
+    <script>
+        async function addPlanet(event) {
+            event.preventDefault()
+
+            const planetFormData = new FormData(event.currentTarget)
+            const rawData = Object.fromEntries(planetFormData.entries())
+            console.log(rawData)
+
+            const response = await fetch(form.action, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(rawData)
+            })
+
+            const createdPlanet = await response.json()
+            console.table(createdPlanet)
+        }
+
+        const form = document.querySelector("#addPlanetForm")
+        form.addEventListener("submit", addPlanet)
+    </script>
+</body>
+</html>

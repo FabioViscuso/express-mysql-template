@@ -19,7 +19,7 @@ exports.ValidationErrorMiddleware = exports.validate = void 0;
 /* import addFormats from "ajv-formats" */
 const express_json_validator_middleware_1 = require("express-json-validator-middleware");
 /* We instantiate a new Validator passing an empty config object this time */
-const validatorInstance = new express_json_validator_middleware_1.Validator({});
+const validatorInstance = new express_json_validator_middleware_1.Validator({ coerceTypes: true });
 /* addFormats(validatorInstance.ajv, ["date-time"])
     .addKeyword("kind")
     .addKeyword("modifier") */

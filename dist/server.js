@@ -31,10 +31,13 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
 /* enable cors */
 app.use((0, cors_1.default)({ origin: "http:/localhost:8080" }));
-/* Set up the home route via GET */
-app.get("/listing", (req, res) => {
-    /* res.writeHead(200, { 'Content-Type': 'text/html' }); */
-    res.sendFile('listing.html', { 'root': `${__dirname}/../web/` });
+/*---------------- TEST PAGES ----------------*/
+/* Set up the list route to serve a list of all planets */
+app.get("/list", (req, res) => {
+    res.sendFile('list.html', { 'root': `${__dirname}/../web/` });
+});
+app.get("/add", (req, res) => {
+    res.sendFile('add.html', { 'root': `${__dirname}/../web/` });
 });
 /*---------------- CRUD ENDPOINTS ----------------*/
 /* Create new planet */
