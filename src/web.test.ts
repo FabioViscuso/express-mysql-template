@@ -11,11 +11,11 @@ const simulation = supertest(server);
 describe("Test pages", () => {
     test("list.html", async () => {
         const response = await simulation
-            .get("/listing")
+            .get("/list")
             .expect(200)
             .expect("Content-Type", /text\/html/)
 
-        expect(response.text).toContain("Listing page")
+        expect(response.text).toContain("Planets list page")
     })
 
     test("add.html", async () => {
@@ -24,6 +24,6 @@ describe("Test pages", () => {
             .expect(200)
             .expect("Content-Type", /text\/html/)
 
-        expect(response.text).toContain("Add to DB page")
+        expect(response.text).toContain("Add a planet")
     })
 })
