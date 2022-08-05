@@ -1,13 +1,14 @@
 import { Router } from "express";
 import prisma from "../lib/prisma/client";
 import { validate, planetSchema, PlanetSchema } from "../lib/validation";
+import { checkAuthorization } from "../lib/middleware/passport";
 
 const router = Router();
 
 /*---------------- CRUD ENDPOINTS ----------------*/
 
 /* Create new planet */
-router.post("/", validate({ body: planetSchema }), async (req, res) => {
+router.post("/", checkAuthorization, validate({ body: planetSchema }), async (req, res) => {
     /* If the req passes validation, this code will run */
     const incomingPlanetData: PlanetSchema = req.body;
     const newPlanet = await prisma.planet.create({ data: incomingPlanetData })
@@ -37,7 +38,7 @@ router.get("/:id(\\d+)", async (req, res, next) => {
 });
 
 /* Update planet */
-router.put("/:id(\\d+)", validate({ body: planetSchema }), async (req, res, next) => {
+router.put("/:id(\\d+)", checkAuthorization, validate({ body: planetSchema }), async (req, res, next) => {
     const planetID = Number(req.params.id)
     const incomingPlanetData: PlanetSchema = req.body;
 
@@ -54,12 +55,12 @@ router.put("/:id(\\d+)", validate({ body: planetSchema }), async (req, res, next
 });
 
 /* Add photo to a planet */
-router.post("/:id(\\d+)/photo", async (req, res) => {
+router.post("/:id(\\d+)/photo", checkAuthorization, async (req, res) => {
     res.send('PUT route for adding photo to a planet by id')
 });
 
 /* Delete planet(s) */
-router.delete("/:id(\\d+)", async (req, res, next) => {
+router.delete("/:id(\\d+)", checkAuthorization, async (req, res, next) => {
     const planetID = Number(req.params.id)
     try {
         await prisma.planet.delete({ where: { id: planetID } });

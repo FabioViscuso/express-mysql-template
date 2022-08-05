@@ -8,6 +8,7 @@
 </head>
 <body>
     <h1>Add a planet</h1>
+    <a href="http://localhost:8080/auth/login?redirectTo=http://localhost:8080/add">Momentary Login Button</a>
     <form id="addPlanetForm" action="http://localhost:8080/planets">
         <label for="name">Planet name: </label>
         <input name="name" type="text" id="name">
@@ -36,7 +37,8 @@
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(rawData)
+                body: JSON.stringify(rawData),
+                credentials: "include"
             })
 
             const createdPlanet = await response.json()
