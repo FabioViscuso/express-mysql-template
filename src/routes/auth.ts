@@ -14,21 +14,24 @@ router.get("/login", (req, res, next) => {
 })
 
 router.get("/auth/github/login",
-    passport.authenticate("github", { scope: ["user:email"] }));
-
-router.get("/github/callback",
     passport.authenticate(
         "github",
-        // @ts-ignore KNOWN ISSUE WITH PASSPORT
-        { failureRedirect: "/auth/github/login", keepSessionInfo: true },
-        (req, res) => {
-            if (typeof req.session.redirectTo !== "string") {
-                return res.status(500).end()
-            }
-
-            res.redirect(req.session.redirectTo)
+        {
+            scope: ["user:email"]
         }
     )
+);
+
+router.get("/github/callback",
+    // @ts-ignore KNOWN ISSUE WITH PASSPORT
+    passport.authenticate("github", { failureRedirect: "/auth/github/login", keepSessionInfo: true }),
+    (req, res) => {
+        if (typeof req.session.redirectTo !== "string") {
+            return res.status(500).end()
+        }
+
+        res.redirect(req.session.redirectTo)
+    }
 )
 
 router.get("/logout", (req, res, next) => {
@@ -41,7 +44,7 @@ router.get("/logout", (req, res, next) => {
 
     req.logout((err) => {
         if (err) {
-            next(err)
+            return next(err)
         }
 
         res.redirect(redirectURL)
