@@ -11,7 +11,14 @@ const router = Router();
 router.post("/", checkAuthorization, validate({ body: planetSchema }), async (req, res) => {
     /* If the req passes validation, this code will run */
     const incomingPlanetData: PlanetSchema = req.body;
-    const newPlanet = await prisma.planet.create({ data: incomingPlanetData })
+    const username = req.user?.username;
+    const newPlanet = await prisma.planet.create({
+        data: {
+            ...incomingPlanetData,
+            createdBy: username,
+            updatedBy: username
+        }
+    })
     res.status(201).json(newPlanet);
 });
 
@@ -41,11 +48,12 @@ router.get("/:id(\\d+)", async (req, res, next) => {
 router.put("/:id(\\d+)", checkAuthorization, validate({ body: planetSchema }), async (req, res, next) => {
     const planetID = Number(req.params.id)
     const incomingPlanetData: PlanetSchema = req.body;
+    const username = req.user?.username as string;
 
     try {
         const planet = await prisma.planet.update({
             where: { id: planetID },
-            data: incomingPlanetData
+            data: { ...incomingPlanetData, updatedBy: username }
         });
         res.status(200).json(planet);
     } catch (err) {
