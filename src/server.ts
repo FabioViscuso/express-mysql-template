@@ -9,7 +9,7 @@ import "express-async-errors";
 import cors from 'cors';
 /* Import routes */
 import planetsRoutes from "./routes/planets";
-import authRoutes from "./routes/auth";
+/* import authRoutes from "./routes/auth"; */
 /* Import middleware */
 import { ValidationErrorMiddleware } from "./lib/validation";
 import { initSessionMiddleware } from "./lib/middleware/session";
@@ -31,9 +31,57 @@ app.use(express.json());
 app.use(cors({ origin: "http:/localhost:8080", credentials: true }));
 
 /* define the auth routes */
-app.use("/auth", authRoutes)
+/* app.use("/auth", authRoutes) */
 /* define the entry point for our REST endpoints in planets.ts */
 app.use("/planets", planetsRoutes)
+
+app.get("/auth/login", (req, res, next) => {
+    if (typeof req.query.redirectTo !== "string" || !req.query.redirectTo) {
+        res.status(400);
+        return next("Missing redirectTo query string param");
+    }
+
+    req.session.redirectTo = req.query.redirectTo;
+    res.redirect("/auth/github/login")
+})
+
+app.get("/auth/github/login",
+    passport.authenticate(
+        "github",
+        {
+            scope: ["user:email"]
+        }
+    )
+);
+
+app.get("/auth/github/callback",
+    // @ts-ignore KNOWN ISSUE WITH PASSPORT
+    passport.authenticate("github", { failureRedirect: "/auth/github/login", keepSessionInfo: true }),
+    (req, res) => {
+        if (typeof req.session.redirectTo !== "string") {
+            return res.status(500).end()
+        }
+
+        res.redirect(req.session.redirectTo)
+    }
+)
+
+app.get("/auth/logout", (req, res, next) => {
+    if (typeof req.query.redirectTo !== "string" || !req.query.redirectTo) {
+        res.status(400);
+        return next("Missing redirectTo query string param");
+    }
+
+    const redirectURL = req.query.redirectTo;
+
+    req.logout((err) => {
+        if (err) {
+            return next(err)
+        }
+
+        res.redirect(redirectURL)
+    })
+})
 
 /*---------------- TEST PAGES ----------------*/
 

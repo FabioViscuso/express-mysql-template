@@ -1,6 +1,6 @@
 import passport from "passport";
 import passportGithub2 from "passport-github2"
-import { RequestHandler, response } from "express";
+import { RequestHandler } from "express";
 
 /* Import config file */
 import config from "../../config";
