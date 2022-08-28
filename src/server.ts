@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 /*
     This file only exports the server code (no exec), to
     allow execution in other files (eg: tests)
@@ -14,6 +15,21 @@ import planetsRoutes from "./routes/planets";
 import { ValidationErrorMiddleware } from "./lib/validation";
 import { initSessionMiddleware } from "./lib/middleware/session";
 import { passport } from "./lib/middleware/passport"
+
+/* TYPES DECLARATION */
+/* @TODO: move them in a separate file */
+declare global {
+    namespace Express {
+        interface User {
+            username: string;
+        }
+    }
+}
+declare module "express-session" {
+    interface SessionData {
+        redirectTo: string;
+    }
+}
 
 /* Within app we call the top-level function exported by express module */
 export const app = express();
