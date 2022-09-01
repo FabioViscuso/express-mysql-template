@@ -1,3 +1,6 @@
+/* Add .env support */
+import "dotenv/config"
+
 const config = {
     "PORT": process.env.PORT || "No value set for PORT",
     "SESSION_SECRET": process.env.SESSION_SECRET || "No value set for SESSION_SECRET",

@@ -19,16 +19,23 @@
 
             data.forEach(element => {
                 const listItem = document.createElement('li')
+                const hr = document.createElement('hr')
+                const image = document.createElement('img')
+
 
                 const planetData = listItem.innerHTML =
-                    `
+                `
                     name: ${element.name} <br>
                     description: ${element.description} <br>
                     diameter: ${element.diameter} <br>
                     moons: ${element.moons} <br>
-                    <hr>
-                    `
+                `
 
+                    listItem.append(image)
+                    image.setAttribute("src", `http://localhost:8080/planets/photos/${element.photoFileName}`)
+                    image.style.width = "200px"
+
+                listItem.appendChild(hr)
                 list.append(listItem)
             });
         }

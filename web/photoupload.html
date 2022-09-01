@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add a photo to a planet</title>
+</head>
+<body>
+    <h1>Upload a photo</h1>
+    <label for="id-selector">Select planet ID: </label>
+    <input type="text" name="id-selector" id="id-selector">
+    <form id="addPhotoForm">
+        <label for="photo">Select photo to upload: </label>
+        <input name="photo" type="file" id="photo" accept=".png, image/png, .jpg, .jpeg. image/jpeg">
+
+        <button type="submit">Add this photo</button>
+    </form>
+    <script>
+        async function uploadPhoto(event) {
+            event.preventDefault()
+
+            const newFormData = new FormData(event.currentTarget)
+            const data = Object.fromEntries(newFormData.entries())
+            console.log(data)
+            const id = document.getElementById('id-selector').value
+
+            const response = await fetch(`http://localhost:8080/planets/${id}/photo`, {
+                method: "POST",
+                body: newFormData,
+            })
+
+            console.table(response)
+        }
+
+        const form = document.querySelector("#addPhotoForm")
+        form.addEventListener("submit", uploadPhoto)
+    </script>
+</body>
+</html>

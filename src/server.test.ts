@@ -340,3 +340,74 @@ describe("DELETE /planets/:id", () => {
 /* ----------------- */
 /* CRUD TEST: DELETE */
 /* ----------------- */
+
+
+/* -------------------- */
+/* CRUD TEST: ADD PHOTO */
+/* -------------------- */
+describe('POST /planets/0/photo', () => {
+    test('Invalid photo add: no file attached', async () => {
+        const response = await simulation
+            .post("/planets/qwerty/photo")
+            .expect(404)
+            .expect("Content-Type", /text\/html/)
+
+        expect(response.text).toContain("no file provided")
+    })
+
+    test('Invalid photo add: no planet found', async () => {
+        prismaMock.planet.update.mockRejectedValue(new Error("error"))
+
+        const response = await simulation
+            .post("/planets/99/photo")
+            .attach("photo", "text-fixtures/photos/earth.png")
+            .expect(404)
+            .expect("Content-Type", /text\/html/)
+
+        expect(response.text).toContain("no such planet")
+    })
+
+    test('Invalid photo add: file type not allowed', async () => {
+        prismaMock.planet.update.mockRejectedValue(new Error("error"))
+
+        const response = await simulation
+            .post("/planets/1/photo")
+            .attach("photo", "text-fixtures/photos/earth.txt")
+            .expect(500)
+            .expect("Content-Type", /text\/html/)
+
+        expect(response.text).toContain("invalid file type")
+    })
+
+    test('Invalid photo add: invalid ID', async () => {
+        const response = await simulation
+            .post("/planets/1/photo")
+            .expect(400)
+            .expect("Content-Type", /text\/html/)
+
+        expect(response.text).toContain("Cannot POST /planets/qwerty/photo, invalid id provided")
+    })
+
+    test('Valid photo add', async () => {
+        const response = await simulation
+            .post("/planets/0/photo")
+            .attach("photo", "text-fixtures/photos/earth.png")
+            .expect(201)
+            .expect("Content-Type", /application\/json/)
+
+        expect(response.body).toBe({ message: `photo added` })
+    })
+
+    test('Valid photo add', async () => {
+        const response = await simulation
+            .post("/planets/0/photo")
+            .attach("photo", "text-fixtures/photos/earth.jpeg")
+            .expect(201)
+            .expect("Content-Type", /application\/json/)
+
+        expect(response.body).toBe({ message: `photo added` })
+    })
+})
+/* -------------------- */
+/* CRUD TEST: ADD PHOTO */
+/* -------------------- */
