@@ -10,9 +10,8 @@
     <h1>Planets list page</h1>
     <script>
         async function fetchPlanets() {
-            const res = await fetch('http://localhost:8080/planets');
+            const res = await fetch('https://space-facts-api-pqof.onrender.com/planets');
             const data = await res.json();
-            console.log({data})
 
             const list = document.createElement('ul')
             document.body.appendChild(list)
@@ -32,7 +31,7 @@
                 `
 
                     listItem.append(image)
-                    image.setAttribute("src", `http://localhost:8080/planets/photos/${element.photoFileName}`)
+                    image.setAttribute("src", `https://space-facts-api-pqof.onrender.com/planets/photos/${element.photoFileName}`)
                     image.style.width = "200px"
 
                 listItem.appendChild(hr)
