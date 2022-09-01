@@ -2,8 +2,13 @@ import { Router } from "express";
 import prisma from "../lib/prisma/client";
 import { validate, planetSchema, PlanetSchema } from "../lib/validation";
 import { checkAuthorization } from "../lib/middleware/passport";
+import { initMulterMiddleware } from "../lib/middleware/multer";
+
 
 const router = Router();
+
+/* We import the main function in the multer middleware file */
+const upload = initMulterMiddleware();
 
 /*---------------- CRUD ENDPOINTS ----------------*/
 
@@ -63,8 +68,18 @@ router.put("/:id(\\d+)", checkAuthorization, validate({ body: planetSchema }), a
 });
 
 /* Add photo to a planet */
-router.post("/:id(\\d+)/photo", checkAuthorization, async (req, res) => {
-    res.send('PUT route for adding photo to a planet by id')
+/*
+    PLEASE NOTE: the "photo" name must be the same as the name of the input that
+    handles the photo: <input type="file" name="photo">
+ */
+router.post("/:id(\\d+)/photo", upload.single("photo"), checkAuthorization, async (req, res, next) => {
+    if (!req.file) {
+        res.status(400)
+        return next("no file provided")
+    }
+
+    const photo = req.file.filename
+    res.status(201).json({ message: `photo added: ${photo}` })
 });
 
 /* Delete planet(s) */

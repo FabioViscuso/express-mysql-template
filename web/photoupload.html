@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add a photo to a planet</title>
+</head>
+<body>
+    <h1>Upload a photo</h1>
+    <form id="addPhotoForm"
+    method="post"
+    enctype="multipart/form-data"
+    action="http://localhost:8080/planets/0/photo">
+        <label for="name">Upload: </label>
+        <input name="photo" type="file" id="photo">
+
+        <button type="submit">Add this photo</button>
+    </form>
+</body>
+</html>

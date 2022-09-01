@@ -110,6 +110,11 @@ app.get("/add", (req, res) => {
     res.sendFile('add.html', { 'root': `${__dirname}/../web/` });
 });
 
+app.get("/photoupload", (req, res) => {
+    res.sendFile('photoupload.html', { 'root': `${__dirname}/../web/` });
+});
+
+
 /* This middleware needs to be used after all the routes, like a "catch" */
 app.use(ValidationErrorMiddleware)
 
