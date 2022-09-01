@@ -16,8 +16,20 @@ export const generateFileName = (mimeType: string) => {
     return fileName
 }
 
-export const multerOptions = {
+const validTypes = ["image/png", "image/jpeg"]
+const validateFileType: multer.Options["fileFilter"] = (req, file, callback) => {
+    if (validTypes.includes(file.mimetype)) {
+        callback(null, true)
+    } else {
+        callback(new Error('invalid file type'))
+    }
+}
 
+export const multerOptions = {
+    validateFileType,
+    limits: {
+        fileSize: 6 * 1024 * 1024
+    }
 }
 
 export const initMulterMiddleware = () => {

@@ -115,6 +115,9 @@ app.get("/photoupload", (req, res) => {
 });
 
 
+/* Add the static serve middleware to each photos route */
+app.use("/planets/photos", express.static("uploads"))
+
 /* This middleware needs to be used after all the routes, like a "catch" */
 app.use(ValidationErrorMiddleware)
 

@@ -73,9 +73,27 @@ router.put("/:id(\\d+)", checkAuthorization, validate({ body: planetSchema }), a
     handles the photo: <input type="file" name="photo">
  */
 router.post("/:id(\\d+)/photo", upload.single("photo"), checkAuthorization, async (req, res, next) => {
+    console.log(req.file)
     if (!req.file) {
         res.status(400)
         return next("no file provided")
+    }
+
+
+    const planetID = Number(req.params.id)
+
+    try {
+        await prisma.planet.update({
+            where: {
+                id: planetID
+            },
+            data: {
+                photoFileName: req.file.filename
+            }
+        })
+    } catch (err) {
+        res.status(404)
+        next('no such planet with id ' + planetID)
     }
 
     const photo = req.file.filename

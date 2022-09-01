@@ -8,14 +8,33 @@
 </head>
 <body>
     <h1>Upload a photo</h1>
-    <form id="addPhotoForm"
-    method="post"
-    enctype="multipart/form-data"
-    action="http://localhost:8080/planets/0/photo">
-        <label for="name">Upload: </label>
-        <input name="photo" type="file" id="photo">
+    <label for="id-selector">Select planet ID: </label>
+    <input type="text" name="id-selector" id="id-selector">
+    <form id="addPhotoForm">
+        <label for="photo">Select photo to upload: </label>
+        <input name="photo" type="file" id="photo" accept=".png, image/png, .jpg, .jpeg. image/jpeg">
 
         <button type="submit">Add this photo</button>
     </form>
+    <script>
+        async function uploadPhoto(event) {
+            event.preventDefault()
+
+            const newFormData = new FormData(event.currentTarget)
+            const data = Object.fromEntries(newFormData.entries())
+            console.log(data)
+            const id = document.getElementById('id-selector').value
+
+            const response = await fetch(`http://localhost:8080/planets/${id}/photo`, {
+                method: "POST",
+                body: newFormData,
+            })
+
+            console.table(response)
+        }
+
+        const form = document.querySelector("#addPhotoForm")
+        form.addEventListener("submit", uploadPhoto)
+    </script>
 </body>
 </html>
