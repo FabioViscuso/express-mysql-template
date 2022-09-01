@@ -1,11 +1,11 @@
-import { response, Router } from "express";
+import { Router } from "express";
 import { passport } from "../lib/middleware/passport";
 
 const router = Router();
 
 router.get("/login", (req, res, next) => {
     if (typeof req.query.redirectTo !== "string" || !req.query.redirectTo) {
-        response.status(400);
+        res.status(400);
         return next("Missing redirectTo query string param");
     }
 
@@ -13,7 +13,7 @@ router.get("/login", (req, res, next) => {
     res.redirect("/auth/github/login")
 })
 
-router.get("/auth/github/login",
+router.get("/github/login",
     passport.authenticate(
         "github",
         {
@@ -36,7 +36,7 @@ router.get("/github/callback",
 
 router.get("/logout", (req, res, next) => {
     if (typeof req.query.redirectTo !== "string" || !req.query.redirectTo) {
-        response.status(400);
+        res.status(400);
         return next("Missing redirectTo query string param");
     }
 
