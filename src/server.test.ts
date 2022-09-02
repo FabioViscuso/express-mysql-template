@@ -88,9 +88,9 @@ describe("GET /planets/:id", () => {
         const response = await simulation
             .get("/planets/99")
             .expect(404)
-            .expect("Content-Type", /text\/html/)
+            .expect("Content-Type", /application\/json/)
 
-        expect(response.text).toContain("Cannot GET /planets/99. Element does not exist")
+        expect(response.body.message).toContain("Cannot GET /planets/99. Element does not exist")
 
     })
     /* END OF INVALID REQUEST: MISSING ELEMENT */
@@ -101,9 +101,9 @@ describe("GET /planets/:id", () => {
         const response = await simulation
             .get("/planets/qwerty")
             .expect(404)
-            .expect("Content-Type", /text\/html/)
+            .expect("Content-Type", /application\/json/)
 
-        expect(response.text).toContain("Cannot GET /planets/qwerty")
+        expect(response.body.message).toContain("Cannot GET /planets/qwerty")
     })
     /* END OF INVALID REQUEST: INVALID ID */
 })
@@ -195,9 +195,9 @@ describe("PUT /planets/:id", () => {
             .put("/planets/99")
             .send(mockPlanet)
             .expect(404)
-            .expect("Content-Type", /text\/html/)
+            .expect("Content-Type", /application\/json/)
 
-        expect(response.text).toContain("Cannot PUT /planets/99. Element does not exist")
+        expect(response.body.message).toContain("Cannot PUT /planets/99. Element does not exist")
     })
     /* END OF INVALID REQUEST: NO SUCH ENTRY */
 
@@ -207,9 +207,9 @@ describe("PUT /planets/:id", () => {
         const response = await simulation
             .put("/planets/qwerty")
             .expect(404)
-            .expect("Content-Type", /text\/html/)
+            .expect("Content-Type", /application\/json/)
 
-        expect(response.text).toContain("Cannot PUT /planets/qwerty")
+        expect(response.body.message).toContain("Cannot PUT /planets/qwerty")
     })
     /* END OF INVALID REQUEST: INVALID ID FORMAT */
 })
@@ -305,7 +305,7 @@ describe("DELETE /planets/:id", () => {
             .delete("/planets/1")
             .expect(204) // No Content status code
 
-        expect(response.text).toEqual("")
+        expect(response.body.message).toEqual("")
     })
     /* END OF VALID REQUEST */
 
@@ -319,9 +319,9 @@ describe("DELETE /planets/:id", () => {
         const response = await simulation
             .delete("/planets/99")
             .expect(404)
-            .expect("Content-Type", /text\/html/)
+            .expect("Content-Type", /application\/json/)
 
-        expect(response.text).toContain("Cannot DELETE /planets/99. Element does not exist")
+        expect(response.body.message).toContain("Cannot DELETE /planets/99. Element does not exist")
     })
     /* END OF INVALID REQUEST: NO SUCH ENTRY */
 
@@ -331,9 +331,9 @@ describe("DELETE /planets/:id", () => {
         const response = await simulation
             .delete("/planets/qwerty")
             .expect(404)
-            .expect("Content-Type", /text\/html/)
+            .expect("Content-Type", /application\/json/)
 
-        expect(response.text).toContain("Cannot DELETE /planets/qwerty")
+        expect(response.body.message).toContain("Cannot DELETE /planets/qwerty")
     })
     /* END OF INVALID REQUEST: INVALID ID FORMAT */
 })
@@ -350,9 +350,9 @@ describe('POST /planets/0/photo', () => {
         const response = await simulation
             .post("/planets/qwerty/photo")
             .expect(404)
-            .expect("Content-Type", /text\/html/)
+            .expect("Content-Type", /application\/json/)
 
-        expect(response.text).toContain("no file provided")
+        expect(response.body.message).toContain("no file provided")
     })
 
     test('Invalid photo add: no planet found', async () => {
@@ -362,9 +362,9 @@ describe('POST /planets/0/photo', () => {
             .post("/planets/99/photo")
             .attach("photo", "text-fixtures/photos/earth.png")
             .expect(404)
-            .expect("Content-Type", /text\/html/)
+            .expect("Content-Type", /application\/json/)
 
-        expect(response.text).toContain("no such planet")
+        expect(response.body.message).toContain("no such planet")
     })
 
     test('Invalid photo add: file type not allowed', async () => {
@@ -374,18 +374,18 @@ describe('POST /planets/0/photo', () => {
             .post("/planets/1/photo")
             .attach("photo", "text-fixtures/photos/earth.txt")
             .expect(500)
-            .expect("Content-Type", /text\/html/)
+            .expect("Content-Type", /application\/json/)
 
-        expect(response.text).toContain("invalid file type")
+        expect(response.body.message).toContain("invalid file type")
     })
 
     test('Invalid photo add: invalid ID', async () => {
         const response = await simulation
             .post("/planets/1/photo")
             .expect(400)
-            .expect("Content-Type", /text\/html/)
+            .expect("Content-Type", /application\/json/)
 
-        expect(response.text).toContain("Cannot POST /planets/qwerty/photo, invalid id provided")
+        expect(response.body.message).toContain("Cannot POST /planets/qwerty/photo, invalid id provided")
     })
 
     test('Valid photo add', async () => {
