@@ -1,4 +1,4 @@
-import { Router } from "express";
+import express, { Router } from "express";
 import prisma from "../lib/prisma/client";
 import { validate, planetSchema, PlanetSchema } from "../lib/validation";
 import { checkAuthorization } from "../lib/middleware/passport";
@@ -9,6 +9,9 @@ const router = Router();
 
 /* We import the main function in the multer middleware file */
 const upload = initMulterMiddleware();
+
+/* Add the static serve middleware to each photos route */
+router.use("/photos", express.static("uploads"))
 
 /*---------------- CRUD ENDPOINTS ----------------*/
 
