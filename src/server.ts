@@ -15,6 +15,7 @@ import testPagesRoutes from "./routes/testpages"
 /* Import middleware */
 import { ValidationErrorMiddleware } from "./lib/validation";
 import { initSessionMiddleware } from "./lib/middleware/session";
+import { notFoundMiddleware, initErrorMiddleware } from "./lib/middleware/error";
 import { passport } from "./lib/middleware/passport"
 
 /* TYPES DECLARATION */
@@ -36,7 +37,7 @@ declare module "express-session" {
 export const app = express();
 
 /* GitHub auth middleware */
-app.use(initSessionMiddleware())
+app.use(initSessionMiddleware(app.get("env")))
 app.use(passport.initialize())
 app.use(passport.session())
 
@@ -57,6 +58,8 @@ app.use("/auth", authRoutes)
 app.use("/planets", planetsRoutes)
 /* define the test pages routes */
 app.use("/", testPagesRoutes)
+/* define handling for not found routes */
+app.use(notFoundMiddleware)
 /* ---- ROUTES ---- */
 
 /* Add the static serve middleware to each photos route */
@@ -64,5 +67,8 @@ app.use("/planets/photos", express.static("uploads"))
 
 /* This middleware needs to be used after all the routes, like a "catch" */
 app.use(ValidationErrorMiddleware)
+
+/* middleware to format errors as json */
+app.use(initErrorMiddleware(app.get("env")))
 
 export default app;
